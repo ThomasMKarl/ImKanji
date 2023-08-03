@@ -29,6 +29,8 @@ int main(int, char**)
 {
     initLogging("D:/playground/imgui/qtkanj.log");
 
+    LOG_INFO << "starting...\n";
+
     Cardbox::instance("resources/cardbox.json");
 
     auto mainWindow = Main_Window::createMax("Main Window");
@@ -43,11 +45,13 @@ int main(int, char**)
         mainWindow.renderLoop();
     }
     catch (const std::exception & e) {
-        std::cout << e.what() << "\n";
+        LOG_DEBUG << e.what() << "\n";
+        LOG_ERROR << "unknown error\n";
         return EXIT_FAILURE;
     }
     catch (...) {
-        std::cout << "unknown exception\n";
+        LOG_DEBUG << "unknown exception\n";
+        LOG_ERROR << "unknown error\n";
         return EXIT_FAILURE;
     }
 
