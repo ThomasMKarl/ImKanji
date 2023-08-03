@@ -24,12 +24,9 @@ public:
     void draw(const char* title, bool* p_open = nullptr);
     void prefill();
     bool compareFlashcards() const;
-
-    void fieldChanged(Table_Window & source, const std::string & fieldName) override
-    {
-        if (fieldName == "selected")
-            inputKanji = source.getSelected();
-    }
+    void fieldChanged(Table_Window & source, const std::string & fieldName) override;
+    void clear();
+    void fillAll();
 
 private:
     bool showReport{};

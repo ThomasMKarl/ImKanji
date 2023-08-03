@@ -155,7 +155,7 @@ void Flashcard_Window::draw(const char* title, bool* p_open)
     ImGui::PopFont();
     ImGui::PopItemWidth();
 
-    pushFont(1);
+    pushFont(0);
 
     ImGui::SameLine();
     ImGui::Text("Kanji");
@@ -169,14 +169,18 @@ void Flashcard_Window::draw(const char* title, bool* p_open)
 
     if (!hide.hideKun)
     {
+        pushFont(2);
         ImGui::InputText("##kun", &inputKun);
+        ImGui::PopFont();
         ImGui::SameLine();
         ImGui::Text("Kun");
     }
 
     if (!hide.hideOn)
     {
+        pushFont(2);
         ImGui::InputText("##on", &inputOn);
+        ImGui::PopFont();
         ImGui::SameLine();
         ImGui::Text("On");
     }
@@ -198,7 +202,10 @@ void Flashcard_Window::draw(const char* title, bool* p_open)
             }
         }
         else
+        {
             ++failures;
+            fillAll();
+        }
     }
 
     if (submitted && ImGui::Button("continue"))
@@ -209,6 +216,7 @@ void Flashcard_Window::draw(const char* title, bool* p_open)
             showReport = true;
         else
             currentFlashcard = flashcardDB.at(usedIndices.back() - 1);
+        clear();
     }
 
     ImGui::SameLine();
@@ -226,9 +234,9 @@ void Flashcard_Window::draw(const char* title, bool* p_open)
     if (submitted)
     {
         if (success)
-            ImGui::Text("Success!");
+            Text(1, 1, green, "Success!");
         else
-            ImGui::Text("Failure!");
+            Text(1, 1, red, "Failure!");
     }
 
     ImGui::PopFont();
@@ -244,14 +252,14 @@ void Flashcard_Window::prefill()
         if (hide.hideImi)
             inputImi = toString(currentFlashcard.imi);
         if (hide.hideKun)
-            inputKun = toString(currentFlashcard.kun) ;
+            inputKun = toString(currentFlashcard.kun);
         if (hide.hideOn)
             inputOn = toString(currentFlashcard.on);
     }
     else
     {
         inputImi = toString(currentFlashcard.imi);
-        inputKun = toString(currentFlashcard.kun) ;
+        inputKun = toString(currentFlashcard.kun);
         inputOn = toString(currentFlashcard.on);
     }
 }
@@ -274,4 +282,26 @@ bool Flashcard_Window::compareFlashcards() const
         return false;
 
     return true;
+}
+
+void Flashcard_Window::fieldChanged(Table_Window & source, const std::string & fieldName)
+{
+    if (fieldName == "selected")
+        inputKanji = source.getSelected();
+}
+
+void Flashcard_Window::clear()
+{
+    inputKanji.clear();
+    inputImi.clear();
+    inputKun.clear();
+    inputOn.clear();
+}
+
+void Flashcard_Window::fillAll()
+{
+    inputKanji = currentFlashcard.kanji;
+    inputImi = toString(currentFlashcard.imi);
+    inputKun = toString(currentFlashcard.kun);
+    inputOn = toString(currentFlashcard.on);
 }
