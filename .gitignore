@@ -4,3 +4,4 @@ Makefile
 build
 *.log
 imgui.ini
+checks.json
