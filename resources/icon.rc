@@ -1,0 +1,24 @@
+id ICON "kanji.ico"
+1 VERSIONINFO
+FILEVERSION     1,0,0,0
+PRODUCTVERSION  1,0,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "CompanyName", "Open Boundaries"
+      VALUE "FileDescription", "Kanji Training in ImGui"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "main"
+      VALUE "LegalCopyright", ""
+      VALUE "OriginalFilename", "imkanji.exe"
+      VALUE "ProductName", "ImKanji"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END

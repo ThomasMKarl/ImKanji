@@ -42,15 +42,17 @@ find_package(Glaze REQUIRED)
 
 add_subdirectory(src)
 
-add_executable(main main.cpp)
+add_executable(imkanji main.cpp)
 
-target_include_directories(main PRIVATE "src" "src/windows" "src/imgui" "src/nfd")
+target_include_directories(imkanji PRIVATE "src" "src/error" "src/windows" "src/imgui" "src/nfd")
 
-target_link_libraries(main PRIVATE imkanji)
+target_link_libraries(imkanji PRIVATE imgui_kanji)
+target_sources(imkanji PRIVATE resources/icon.rc)
+target_sources(imkanji PRIVATE resources/icon.res)
 
-target_link_libraries(main PRIVATE Plog::Plog)
-target_link_libraries(main PRIVATE Glaze::Glaze)
+target_link_libraries(imkanji PRIVATE Plog::Plog)
+target_link_libraries(imkanji PRIVATE Glaze::Glaze)
 
-target_link_libraries(main PRIVATE imgui)
-target_link_libraries(main PRIVATE imgui_glfw)
-target_link_libraries(main PRIVATE imgui_opengl3)
+target_link_libraries(imkanji PRIVATE imgui)
+target_link_libraries(imkanji PRIVATE imgui_glfw)
+target_link_libraries(imkanji PRIVATE imgui_opengl3)

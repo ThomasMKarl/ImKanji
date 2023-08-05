@@ -18,8 +18,12 @@ set(src_data
     Platform.cpp
     StbImage.cpp)
 
-add_library(imkanji SHARED ${src_data} ${src_windows})
-target_link_libraries(imkanji PRIVATE Glaze::Glaze)
-target_link_libraries(imkanji PRIVATE Plog::Plog)
-target_link_libraries(imkanji PRIVATE imgui imgui_opengl3 imgui_glfw nfd)
-target_include_directories(imkanji PRIVATE "." "imgui" "windows" "nfd")
+set(src_error
+    error/Console.cpp
+    error/Exceptions.cpp)
+
+add_library(imgui_kanji SHARED ${src_data} ${src_windows} ${src_error})
+target_link_libraries(imgui_kanji PRIVATE Glaze::Glaze)
+target_link_libraries(imgui_kanji PRIVATE Plog::Plog)
+target_link_libraries(imgui_kanji PRIVATE imgui imgui_opengl3 imgui_glfw nfd)
+target_include_directories(imgui_kanji PRIVATE "." "imgui" "windows" "nfd" "error")

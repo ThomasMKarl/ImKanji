@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <filesystem>
+#include "StdExceptions.hpp"
+#include "Exceptions.hpp"
 #include "MainWindow.hpp"
 #include "Flashcard.hpp"
 #include "Cardbox.hpp"
@@ -29,7 +31,7 @@ int main(int, char**)
 {
     initLogging("D:/playground/imgui/qtkanj.log");
 
-    LOG_INFO << "starting...\n";
+    LOG_INFO << "starting...";
 
     Cardbox::instance("resources/cardbox.json");
 
@@ -41,19 +43,15 @@ int main(int, char**)
     
     setCustomStyle();
 
-    try {
-        mainWindow.renderLoop();
+    try
+    {
+      mainWindow.renderLoop();
     }
-    catch (const std::exception & e) {
-        LOG_DEBUG << e.what() << "\n";
-        LOG_ERROR << "unknown error\n";
-        return EXIT_FAILURE;
+    catch (const BaseError & e)
+    {
+      e.handle(GlobalErrorHandler::instance());
     }
-    catch (...) {
-        LOG_DEBUG << "unknown exception\n";
-        LOG_ERROR << "unknown error\n";
-        return EXIT_FAILURE;
-    }
+    _STD_CATCH_BLOCK_
 
     return EXIT_SUCCESS;
 }
