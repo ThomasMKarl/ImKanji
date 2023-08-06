@@ -479,6 +479,7 @@ nfdresult_t NFD_OpenDialogMultipleN(const nfdpathset_t** outPaths,
 }
 
 nfdresult_t NFD_SaveDialogN(nfdnchar_t** outPath,
+                            unsigned char * fileTypeIndex,
                             const nfdnfilteritem_t* filterList,
                             nfdfiltersize_t filterCount,
                             const nfdnchar_t* defaultPath,
