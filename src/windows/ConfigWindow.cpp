@@ -182,7 +182,7 @@ void exportTable(const char * path, const std::pair<Index, Index> & fromTo)
     if (path[0] == '.')
         return;
 
-    char * dot = strchr(path, '.');
+    const char * dot = strchr(path, '.');
     if (dot == nullptr)
         return;
 
