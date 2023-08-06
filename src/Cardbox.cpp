@@ -28,7 +28,7 @@ std::set<Index> & Cardbox::wordBox(uint64_t level)
 
 void Cardbox::write() const
 {
-    auto error = glz::write_file(content, fspath.string());
+    auto error = glz::write_file(content, fspath.string(), std::string{});
     if (error)
         throw std::runtime_error{"cannot write " + fspath.string()};
 }
