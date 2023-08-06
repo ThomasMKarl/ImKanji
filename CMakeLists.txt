@@ -39,6 +39,7 @@ message("CMAKE_HOST_SYSTEM_NAME: ${CMAKE_HOST_SYSTEM_NAME}")
 
 find_package(Plog REQUIRED)
 find_package(Glaze REQUIRED)
+find_package(Stb REQUIRED)
 
 add_subdirectory(src)
 
@@ -47,8 +48,13 @@ add_executable(imkanji main.cpp)
 target_include_directories(imkanji PRIVATE "src" "src/error" "src/windows" "src/imgui" "src/nfd")
 
 target_link_libraries(imkanji PRIVATE imgui_kanji)
-target_sources(imkanji PRIVATE resources/icon.rc)
-target_sources(imkanji PRIVATE resources/icon.res)
+if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
+    target_sources(imkanji PRIVATE resources/icon.rc)
+    target_sources(imkanji PRIVATE resources/icon.res)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
+else ()
+    message(FATAL_ERROR "Your OS is not supported, CMake will exit.")
+endif ()
 
 target_link_libraries(imkanji PRIVATE Plog::Plog)
 target_link_libraries(imkanji PRIVATE Glaze::Glaze)

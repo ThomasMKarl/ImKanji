@@ -25,5 +25,6 @@ set(src_error
 add_library(imgui_kanji SHARED ${src_data} ${src_windows} ${src_error})
 target_link_libraries(imgui_kanji PRIVATE Glaze::Glaze)
 target_link_libraries(imgui_kanji PRIVATE Plog::Plog)
+target_link_libraries(imgui_kanji PRIVATE Stb::Stb)
 target_link_libraries(imgui_kanji PRIVATE imgui imgui_opengl3 imgui_glfw nfd)
 target_include_directories(imgui_kanji PRIVATE "." "imgui" "windows" "nfd" "error")
