@@ -1,7 +1,7 @@
 find_path(
   Stb_INCLUDE_DIR
   NAMES
-    stb.h
+    stb_image.h
   HINTS "${Stb_ROOT_DIR}"
   PATH_SUFFIXES include stb
 )
