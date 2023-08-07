@@ -3,15 +3,15 @@
 #include <chrono>
 #include <concepts>
 #include <future>
-#include <regex> 
+#include <regex>
 #include <any>
 #include <optional>
 #include <variant>
 #include <plog/Log.h>
 
 
-template <typename E>
-requires std::derived_from<E, std::exception>
+template<typename E>
+  requires std::derived_from<E, std::exception>
 std::string stdExceptionToString()
 {
   if constexpr (std::is_same_v<E, std::invalid_argument>)
@@ -63,8 +63,8 @@ std::string stdExceptionToString()
   if constexpr (std::is_same_v<E, std::chrono::ambiguous_local_time>)
     return "chrono::ambiguous_local_time"; // (since C++23)
 
-    if constexpr (std::is_same_v<E, std::format_error>)
-      return "format_error"; //(since C++23)
+  if constexpr (std::is_same_v<E, std::format_error>)
+    return "format_error"; //(since C++23)
 #endif
 
   if constexpr (std::is_same_v<E, std::logic_error>)
@@ -108,27 +108,32 @@ std::string stdExceptionToString()
   return "exception";
 }
 
-template <typename E>
-requires std::derived_from<E, std::exception>
-void logException(const E &e) {
+template<typename E>
+  requires std::derived_from<E, std::exception>
+void logException(const E & e)
+{
   LOG_ERROR << "internal error";
   LOG_DEBUG << stdExceptionToString<E>();
   LOG_DEBUG << e.what();
 }
 
 #ifndef _STD_CATCH_BLOCK_
-#define _STD_CATCH_BLOCK_                                                      \
-  catch (const std::invalid_argument &e) {                                     \
-    logException(e);                                                           \
-  }                                                                            \
-  catch (const std::runtime_error &e) {                                        \
-    logException(e);                                                           \
-  }                                                                            \
-  catch (const std::exception &e) {                                            \
-    logException(e);                                                           \
-  }                                                                            \
-  catch (...) {                                                                \
-    LOG_ERROR << "internal error";                                             \
-    LOG_DEBUG << "unexpected exception";                                       \
+#define _STD_CATCH_BLOCK_                 \
+  catch (const std::invalid_argument & e) \
+  {                                       \
+    logException(e);                      \
+  }                                       \
+  catch (const std::runtime_error & e)    \
+  {                                       \
+    logException(e);                      \
+  }                                       \
+  catch (const std::exception & e)        \
+  {                                       \
+    logException(e);                      \
+  }                                       \
+  catch (...)                             \
+  {                                       \
+    LOG_ERROR << "internal error";        \
+    LOG_DEBUG << "unexpected exception";  \
   }
 #endif

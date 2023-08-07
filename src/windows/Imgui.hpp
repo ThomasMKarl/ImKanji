@@ -11,6 +11,9 @@
 #include "imgui/backends/imgui_impl_opengl3.h"
 
 
+namespace imkanji
+{
+
 class Color
 {
 public:
@@ -28,7 +31,13 @@ public:
   auto imguiValue() const;
 
 private:
-  enum c {r, g, b, a};
+  enum c
+  {
+    r,
+    g,
+    b,
+    a
+  };
   uint8_t values[4];
 
   uint8_t toInt(float value);
@@ -45,3 +54,5 @@ static Color black_t{0.0, 0.0, 0.0, 0.0};
 void Text(uint64_t index, float scale, const Color & color, const char * fmt, ...);
 void pushFont(uint64_t index);
 void scaleFont(float factor);
+
+} // namespace imkanji

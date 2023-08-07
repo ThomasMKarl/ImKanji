@@ -2,16 +2,21 @@
 #include "Imgui.hpp"
 
 
-class Main_MenuBar
+namespace imkanji::menubar
+{
+
+class Main
 {
 public:
-    Main_MenuBar() = default;
+  Main() = default;
 
-    void draw();
+  void draw();
 
 private:
-    bool mShowBuildInfo = false;
-    bool mShowMetrics = false;
-    bool mShowLogging = false;
-    bool mShowStyleEditor = false;
+  bool mShowBuildInfo = false;
+  bool mShowMetrics = false;
+  bool mShowLogging = false;
+  bool mShowStyleEditor = false;
 };
+
+} // namespace imkanji::menubar

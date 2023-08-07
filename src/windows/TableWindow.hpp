@@ -1,17 +1,22 @@
 #pragma once
-#include "Imgui.hpp"
 #include <array>
+#include "Imgui.hpp"
 #include "Observable.hpp"
 #include "Platform.hpp"
 
 
-class Table_Window : public Observable<Table_Window>
+namespace imkanji::window
+{
+
+class Table : public Observable<Table>
 {
 public:
-    void draw(const char* title, bool* p_open = nullptr);
+  void draw(const char * title, bool * p_open = nullptr);
 
-    const std::string & getSelected() const { return selected; }
+  const String & getSelected() const { return selected; }
 
 private:
-    std::string selected{};
+  String selected{};
 };
+
+} // namespace imkanji::window

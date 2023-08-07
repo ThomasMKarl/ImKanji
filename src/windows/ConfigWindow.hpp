@@ -1,47 +1,48 @@
 #pragma once
-#include "Imgui.hpp"
 #include <string>
 #include <optional>
+#include "Imgui.hpp"
 #include "FlashcardWindow.hpp"
 
+
+namespace imkanji::window
+{
 
 void exportHtml(const char * path, const std::pair<Index, Index> & fromTo);
 void exportLatex(const char * path, const std::pair<Index, Index> & fromTo);
 void exportTable(const char * path, const std::pair<Index, Index> & fromTo);
 
-Index toIndex(std::string & val);
-
-bool check(const std::pair<Index, Index> & range);
-
-class Config_Window
+class Config
 {
 public:
-    void draw(const char* title, bool* p_open = nullptr);
+  void draw(const char * title, bool * p_open = nullptr);
 
-    void refTable(Table_Window * tableWindow_) { tableWindow = tableWindow_; }
+  void refTable(Table * tableWindow_) { tableWindow = tableWindow_; }
 
-    void refGraphemes() {}
+  void refGraphemes() {}
 
 private:
-    bool trainingFlashcards{};
-    bool trainingWords{};
-    bool trainingExamples{};
-    bool flashcardCardboxOpen{};
-    bool wordCardboxOpen{};
-    bool exampleCardboxOpen{};
+  bool trainingFlashcards{};
+  bool trainingWords{};
+  bool trainingExamples{};
+  bool flashcardCardboxOpen{};
+  bool wordCardboxOpen{};
+  bool exampleCardboxOpen{};
 
-    bool shuffle{true};
-    bool kanjiFuri{true};
-    Hide hide{};
-    std::string from{"1"};
-    std::string to{"604"};
+  bool shuffle{true};
+  bool kanjiFuri{true};
+  Hide hide{};
+  String from{"1"};
+  String to{"604"};
 
-    std::optional<Flashcard_Window> flashcardWindow{};
-    std::optional<Flashcard_Window> wordWindow{};
-    std::optional<Flashcard_Window> exampleWindow{};
-    std::optional<Flashcard_Window> flashcardCardboxWindow{};
-    std::optional<Flashcard_Window> wordCardboxWindow{};
-    std::optional<Flashcard_Window> exampleCardboxWindow{};
+  std::optional<Flashcard> flashcardWindow{};
+  std::optional<Flashcard> wordWindow{};
+  std::optional<Flashcard> exampleWindow{};
+  std::optional<Flashcard> flashcardCardboxWindow{};
+  std::optional<Flashcard> wordCardboxWindow{};
+  std::optional<Flashcard> exampleCardboxWindow{};
 
-    Table_Window * tableWindow = nullptr;
+  Table * tableWindow = nullptr;
 };
+
+} // namespace imkanji

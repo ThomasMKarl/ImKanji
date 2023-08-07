@@ -4,12 +4,17 @@
 #include "Platform.hpp"
 
 
-class Grapheme_Window
+namespace imkanji::window
+{
+
+class Grapheme
 {
 public:
-    void draw(const char* title, bool* p_open = nullptr);
+  void draw(const char * title, bool * p_open = nullptr);
 
 private:
-    std::vector<std::string> found{};
-    std::array<std::string, 3> selected{};
+  Strings found{};
+  std::array<String, 3> selected{};
 };
+
+} // namespace imkanji::window

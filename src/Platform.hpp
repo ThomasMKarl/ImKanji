@@ -6,56 +6,65 @@
 #include <cinttypes>
 
 
+namespace imkanji
+{
+
 using String = std::string;
 using Strings = std::vector<String>;
+using StringView = std::string_view;
+using StringViews = std::vector<StringView>;
 using Index = uint32_t;
+using Indices = std::vector<Index>;
 
 constexpr bool isDebug()
 {
 #ifdef DEBUG
-	return true;
+  return true;
 #else
-    return false;
+  return false;
 #endif
 }
 
 constexpr bool isRelease()
 {
-    return !isDebug();
+  return !isDebug();
 }
 
 template<typename T>
 bool contains(const std::vector<T> & in, const T & val)
 {
-    for (const auto & elem: in)
-        if (elem == val)
-            return true;
-    return false;
+  for (const auto & elem: in)
+    if (elem == val)
+      return true;
+  return false;
 }
 
-std::string_view trim(const std::string_view & in);
+StringView trim(const StringView & in);
 
-std::string_view trim(const std::string & in);
+StringView trim(const String & in);
 
-std::vector<std::string_view> split(const std::string & val, char delim, bool trimspace = false);
+StringViews split(const String & val, char delim, bool trimspace = false);
 
-Strings convert(const std::vector<std::string_view> & in);
+Strings convert(const StringViews & in);
 
-std::vector<std::string_view> toVectorView(const std::string & in);
+StringViews toVectorView(const String & in);
 
-Strings toVector(const std::string & in);
+Strings toVector(const String & in);
 
 String toString(const Strings & in);
 
 std::filesystem::path makeUtf8Path(const char * path);
 
 template<typename... T>
-String makeString(const char * format, T... args)
+String makeString(const StringView & format, T... args)
 {
-    auto bytes = std::snprintf(nullptr, 0, format, args...);
-    char * buffer = reinterpret_cast<char*>(std::malloc(bytes + 1));
-    std::snprintf(buffer, bytes + 1, format, args...);
-    String res{buffer};
-    free(buffer);
-    return res;
+  auto bytes = std::snprintf(nullptr, 0, format.data(), args...);
+  if (bytes < 0)
+    return {};
+  String res(bytes + 1, 0);
+  std::snprintf(res.data(), bytes + 1, format.data(), args...);
+  res.erase(res.end() - 1);
+  return res;
 }
+
+} // namespace imkanji

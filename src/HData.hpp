@@ -5,8 +5,12 @@
 #include "Platform.hpp"
 
 
+namespace imkanji
+{
+
 constexpr auto numberOfHadamitzkyKanji = 2141ULL;
 
+// clang-format off
 constexpr std::array<const char *, numberOfHadamitzkyKanji> hadamitzkyStrings{
     // 1-100
     "2a0.1+1+3+e", "0a1.1+1+1+n", "0a2.1+1+4+n", "0a3.1+2+4,1+n", "4c0.1+1+42+e", "3s2.2+3+24,16+e", "0a4.27+4+14,1+n",
@@ -210,55 +214,53 @@ constexpr std::array<const char *, numberOfHadamitzkyKanji> hadamitzkyStrings{
     // 2101-2141
     "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
     "", "", "", "", "", "", "", "", "", "", "", ""};
+// clang-format on
 
 struct HData
 {
-    static HData fromString(uint64_t index, const char * in)
-    {
-        HData res{};
+  static HData fromString(uint64_t index, const char * in)
+  {
+    HData res{};
 
-        res.hIndex = index;
+    res.hIndex = index;
 
-        if (strcmp(in, "") == 0)
-            return res;
+    if (strcmp(in, "") == 0)
+      return res;
 
-        std::string buffer = in;
-        auto splitBuf = split(buffer, '+', false);
+    String buffer = in;
+    auto splitBuf = split(buffer, '+', false);
 
-        res.hString = splitBuf[0];
-        res.image = static_cast<uint8_t>(std::stoul(splitBuf[1].data()));
+    res.hString = splitBuf[0];
+    res.image = static_cast<uint8_t>(std::stoul(splitBuf[1].data()));
 
-        if (splitBuf[3] == "e")
-            res.isFirst = true;
-        else if (splitBuf[3] == "n")
-            res.isFirst = false;
-        else
-            throw std::runtime_error{"error parsing index " + std::to_string(index)};
+    if (splitBuf[3] == "e")
+      res.isFirst = true;
+    else if (splitBuf[3] == "n")
+      res.isFirst = false;
+    else
+      throw std::runtime_error{"error parsing index " + std::to_string(index)};
 
-        splitBuf = split(splitBuf[2].data(), ',', false);
-        for (const auto & buf : splitBuf)
-            res.radicals.push_back(static_cast<Index>(std::stoul(buf.data())));
-        return res;
-    }
+    splitBuf = split(splitBuf[2].data(), ',', false);
+    for (const auto & buf: splitBuf)
+      res.radicals.push_back(static_cast<Index>(std::stoul(buf.data())));
+    return res;
+  }
 
-    bool isFirst{};
-    uint8_t image{};
-    Index hIndex{};
-    std::string hString{};
-    std::vector<Index> radicals{};
-};
-
-template<>
-struct glz::meta<HData>
-{
-    using T = HData;
-    static constexpr auto value = object(
-        "hIndex", &T::hIndex,
-        "hString", &T::hString,
-        "image", &T::image,
-        "radicals", &T::radicals,
-        "isFirst", &T::isFirst
-    );
+  bool isFirst{};
+  uint8_t image{};
+  Index hIndex{};
+  String hString{};
+  std::vector<Index> radicals{};
 };
 
 std::vector<HData> readHdata();
+
+} // namespace imkanji
+
+template<>
+struct glz::meta<imkanji::HData>
+{
+  using T = imkanji::HData;
+  static constexpr auto value = object(
+      "hIndex", &T::hIndex, "hString", &T::hString, "image", &T::image, "radicals", &T::radicals, "isFirst", &T::isFirst);
+};

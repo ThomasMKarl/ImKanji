@@ -10,48 +10,48 @@
 #include "Cardbox.hpp"
 
 
-void initLogging(const char * path)
+void initLogging(const std::string_view & path)
 {
-    if (path == nullptr)
-        return;
+  if (path.empty())
+    return;
 
-    auto logFile = makeUtf8Path(path);
-    if (std::filesystem::exists(logFile))
+  auto logFile = imkanji::makeUtf8Path(path.data());
+  if (std::filesystem::exists(logFile))
+  {
+    if (!std::filesystem::remove(logFile))
     {
-        if (!std::filesystem::remove(logFile))
-        {
-            std::cout << "cannot remove old log at \"" << logFile.string() << "\"\n";
-            return;
-        }
+      LOG_ERROR << "cannot remove old log at \"" << logFile.string() << "\"\n";
+      return;
     }
-    plog::init(plog::debug, logFile.c_str());
+  }
+  plog::init(plog::debug, logFile.c_str());
 }
 
-int main(int, char**)
+int main(int, char **)
 {
-    initLogging("D:/playground/imgui/qtkanj.log");
+  initLogging("qtkanj.log");
 
-    LOG_INFO << "starting...";
+  LOG_INFO << "starting...";
 
-    Cardbox::instance("resources/cardbox.json");
+  imkanji::Cardbox::instance("resources/cardbox.json");
 
-    auto mainWindow = Main_Window::createMax("Main Window");
-    mainWindow.addFont("resources/fonts/dejavu/DejaVuSans.ttf", 20.0f);
-    mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 20.0f);
-    mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 30.0f);
-    mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 100.0f);
-    
-    setCustomStyle();
+  auto mainWindow = imkanji::window::Main::createMax("Main Window");
+  mainWindow.addFont("resources/fonts/dejavu/DejaVuSans.ttf", 20.0f);
+  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 20.0f);
+  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 30.0f);
+  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 100.0f);
 
-    try
-    {
-      mainWindow.renderLoop();
-    }
-    catch (const BaseError & e)
-    {
-      e.handle(GlobalErrorHandler::instance());
-    }
-    _STD_CATCH_BLOCK_
+  imkanji::window::setCustomStyle();
 
-    return EXIT_SUCCESS;
+  try
+  {
+    mainWindow.renderLoop();
+  }
+  catch (const BaseError & e)
+  {
+    e.handle(GlobalErrorHandler::instance());
+  }
+  _STD_CATCH_BLOCK_
+
+  return EXIT_SUCCESS;
 }

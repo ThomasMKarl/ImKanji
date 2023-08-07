@@ -3,6 +3,7 @@
 
 constexpr auto numberOfKanji = 540ULL;
 
+// clang-format off
 constexpr std::array<const char *, numberOfKanji> kanjiList{
     "人", "本", "日", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "時", "分", "半", "今", "何", "行",
     "来", "学", "大", "生", "先", "友", "語", "英", "曜", "月", "火", "水", "木", "金", "土", "週", "毎", "間", "口",
@@ -32,117 +33,118 @@ constexpr std::array<const char *, numberOfKanji> kanjiList{
     "宅", "祭", "戦", "争", "律", "義", "議", "党", "涼", "暖", "静", "込", "連", "窓", "側", "葉", "景", "吉", "共",
     "供", "若", "老", "息", "娘", "奥", "将", "祖", "招", "歳", "冊", "億", "段", "倍", "次", "他", "勝", "負", "賛",
     "成", "絶", "辞", "投", "束", "守", "過", "夢", "速", "遅", "駐", "船", "座", "席", "陸", "神", "申", "査", "談",
-    "王", "案", "君", "達", "星", "雪", "直", "危"};    
+    "王", "案", "君", "達", "星", "雪", "直", "危"};
+// clang-format on
 
-    void Table_Window::draw(const char* title, bool* p_open)
+void imkanji::window::Table::draw(const char * title, bool * p_open)
+{
+  String newselect = selected;
+
+  if (!ImGui::Begin(title, p_open))
+  {
+    ImGui::End();
+    return;
+  }
+
+  pushFont(1);
+
+  if (selected.empty())
+    ImGui::Text(" ");
+  else
+    ImGui::Text(("Selected: " + selected).c_str());
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("1 - 28"))
+  {
+    for (unsigned int index = 0; index < 28; ++index)
     {
-        std::string newselect = selected;
-
-        if (!ImGui::Begin(title, p_open))
-        {
-            ImGui::End();
-            return;
-        }
-
-        pushFont(1);
-
-        if (selected.empty())
-            ImGui::Text(" ");
-        else
-            ImGui::Text(("Selected: " + selected).c_str());
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("1 - 28"))
-        {
-            for (unsigned int index = 0; index < 28; ++index)
-            {
-                if (index % 12 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("29 - 100"))
-        {
-            for (unsigned int index = 28; index < 100; ++index)
-            {
-                if ((index - 28) % 12 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-        
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("101 - 172"))
-        {
-            for (unsigned int index = 100; index < 172; ++index)
-            {
-                if ((index - 100) % 12 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("173 - 244"))
-        {
-            for (unsigned int index = 172; index < 244; ++index)
-            {
-                if ((index - 172) % 12 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("245 - 316"))
-        {
-            for (unsigned int index = 244; index < 316; ++index)
-            {
-                if ((index - 244) % 12 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("317 - 460"))
-        {
-            for (unsigned int index = 316; index < 460; ++index)
-            {
-                if ((index - 316) % 24 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        ImGui::Separator();
-        if (ImGui::CollapsingHeader("461 - 540"))
-        {
-            for (unsigned int index = 460; index < numberOfKanji; ++index)
-            {
-                if ((index - 460) % 24 !=0)
-                    ImGui::SameLine();
-                if (ImGui::Button(kanjiList[index]))
-                    newselect = kanjiList[index];
-            }
-        }
-
-        if (selected != newselect)
-        {
-            std::swap(selected, newselect);
-            notify(*this, "selected");
-        }
-
-        ImGui::PopFont();
-
-        ImGui::Separator();
-        ImGui::End();
+      if (index % 12 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
     }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("29 - 100"))
+  {
+    for (unsigned int index = 28; index < 100; ++index)
+    {
+      if ((index - 28) % 12 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("101 - 172"))
+  {
+    for (unsigned int index = 100; index < 172; ++index)
+    {
+      if ((index - 100) % 12 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("173 - 244"))
+  {
+    for (unsigned int index = 172; index < 244; ++index)
+    {
+      if ((index - 172) % 12 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("245 - 316"))
+  {
+    for (unsigned int index = 244; index < 316; ++index)
+    {
+      if ((index - 244) % 12 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("317 - 460"))
+  {
+    for (unsigned int index = 316; index < 460; ++index)
+    {
+      if ((index - 316) % 24 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader("461 - 540"))
+  {
+    for (unsigned int index = 460; index < numberOfKanji; ++index)
+    {
+      if ((index - 460) % 24 != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        newselect = kanjiList[index];
+    }
+  }
+
+  if (selected != newselect)
+  {
+    std::swap(selected, newselect);
+    notify(*this, "selected");
+  }
+
+  ImGui::PopFont();
+
+  ImGui::Separator();
+  ImGui::End();
+}

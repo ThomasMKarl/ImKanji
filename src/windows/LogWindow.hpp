@@ -1,54 +1,84 @@
 #pragma once
 #include "Imgui.hpp"
+#include "Platform.hpp"
 #include "plog/Log.h"
 
 
-#define IIMLOG(_MESSAGE_, ...)                                                                                                                     \
-{                                                                                                                                                  \
-    String fullMess{std::string{"INFO: "} + __PRETTY_FUNCTION__ + " " + __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" + _MESSAGE_ + "\n"};    \
-    fullMess = makeString(fullMess.c_str(), __VA_ARGS__);                                                                                          \
-    PLOGI << makeString(_MESSAGE_, __VA_ARGS__) << "\n";                                                                                           \
-    Log_Window::instance().addLog("%s", fullMess.c_str());                                                                                         \
-}
+#define IIMLOG(_MESSAGE_, ...)                                                       \
+  {                                                                                  \
+    imkanji::String fullMess{imkanji::String{"INFO: "} + __PRETTY_FUNCTION__ + " " + \
+                             __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" +    \
+                             _MESSAGE_ + "\n"};                                      \
+    fullMess = imkanji::makeString(fullMess.c_str(), __VA_ARGS__);                   \
+    PLOGI << imkanji::makeString(_MESSAGE_, __VA_ARGS__) << "\n";                    \
+    imkanji::window::Log::instance().addLog(fullMess.c_str(), "");                   \
+  }
 
-#define WIMLOG(_MESSAGE_, ...)                                                                                                                     \
-{                                                                                                                                                  \
-    String fullMess{std::string{"WARNING: "} + __PRETTY_FUNCTION__ + " " + __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" + _MESSAGE_ + "\n"}; \
-    PLOGW << makeString(fullMess.c_str(), __VA_ARGS__);                                                                                            \
-    Log_Window::instance().addLog(fullMess.c_str(), __VA_ARGS__);                                                                                  \
-}
+#define WIMLOG(_MESSAGE_, ...)                                                          \
+  {                                                                                     \
+    imkanji::String fullMess{imkanji::String{"WARNING: "} + __PRETTY_FUNCTION__ + " " + \
+                             __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" +       \
+                             _MESSAGE_ + "\n"};                                         \
+    fullMess = imkanji::makeString(fullMess.c_str(), __VA_ARGS__);                      \
+    PLOGW << imkanji::makeString(_MESSAGE_, __VA_ARGS__);                               \
+    imkanji::Log::instance().addLog(fullMess.c_str(), "");                              \
+  }
 
-#define EIMLOG(_MESSAGE_, ...)                                                                                                                     \
-{                                                                                                                                                  \
-    String fullMess{std::string{"ERROR: "} + __PRETTY_FUNCTION__ + " " + __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" + _MESSAGE_ + "\n"};   \
-    PLOGE << makeString(fullMess.c_str(), __VA_ARGS__);                                                                                            \
-    Log_Window::instance().addLog(fullMess.c_str(), __VA_ARGS__);                                                                                  \
-}
+#define EIMLOG(_MESSAGE_, ...)                                                        \
+  {                                                                                   \
+    imkanji::String fullMess{imkanji::String{"ERROR: "} + __PRETTY_FUNCTION__ + " " + \
+                             __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" +     \
+                             _MESSAGE_ + "\n"};                                       \
+    fullMess = imkanji::makeString(fullMess.c_str(), __VA_ARGS__);                    \
+    PLOGE << imkanji::makeString(_MESSAGE_, __VA_ARGS__);                             \
+    imkanji::window::Log::instance().addLog(fullMess.c_str(), "");                    \
+  }
 
-struct Log_Window
+namespace imkanji::window
+{
+
+struct Log
 {
 public:
-    static Log_Window & instance()
+  static Log & instance()
+  {
+    static Log * inst = new Log{};
+    return *inst;
+  }
+
+  void clear();
+
+  template<typename... Ts>
+  void addLog(const StringView & fmt, Ts... args)
+  {
+    uint32_t begin = mBuf.size();
+    mBuf.append(makeString(fmt, args...));
+    const uint32_t end = mBuf.size();
+
+    for (auto index = begin; index < end; ++index)
     {
-        static Log_Window * inst = new Log_Window{};
-        return *inst;
+      if (mBuf[index] == '\n')
+      {
+        auto numChars = index - begin;
+        mLines.emplace_back(StringView{mBuf.c_str() + begin, numChars});
+        begin = index + 1;
+      }
     }
+  }
 
-    void clear();
+  void draw(const char * title, bool * p_open = nullptr);
 
-    void addLog(const char* fmt, ...) IM_FMTARGS(2);
-
-    void draw(const char* title, bool* p_open = nullptr);
-
-    Log_Window(const Log_Window&) = delete;
-    Log_Window(Log_Window&&) = delete;
-    Log_Window& operator=(const Log_Window&) = delete;
-    Log_Window& operator=(Log_Window&&) = delete;
+  Log(const Log &) = delete;
+  Log(Log &&) = delete;
+  Log & operator=(const Log &) = delete;
+  Log & operator=(Log &&) = delete;
 
 private:
-    Log_Window() { clear(); }
+  Log() { clear(); }
 
-    ImGuiTextBuffer mBuf{};
-    ImVector<uint8_t> mLineOffsets{};
-    bool mAutoScroll = true;
+  bool mAutoScroll = true;
+  String mBuf{};
+  StringViews mLines{};
 };
+
+} // namespace imkanji::window

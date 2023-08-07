@@ -1,7 +1,7 @@
 #include "Exceptions.hpp"
 
 
-void GlobalErrorHandler::handle(const Error &e) const
+void GlobalErrorHandler::handle(const Error & e) const
 {
   setupConsole();
   LOG_ERROR << colorize(e.releaseMessage, AnsiColorF::Red);
@@ -9,7 +9,7 @@ void GlobalErrorHandler::handle(const Error &e) const
   restoreConsole();
 }
 
-void GlobalErrorHandler::handle(const FatalError &e) const
+void GlobalErrorHandler::handle(const FatalError & e) const
 {
   setupConsole();
   LOG_ERROR << colorize(e.releaseMessage, AnsiColorF::Red);
