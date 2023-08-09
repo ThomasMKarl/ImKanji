@@ -13,6 +13,8 @@ public:
   void draw(const char * title, bool * p_open = nullptr);
 
 private:
+  void table(unsigned int strokeNum);
+
   Strings found{};
   std::array<String, 3> selected{};
 };

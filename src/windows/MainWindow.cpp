@@ -89,6 +89,9 @@ void imkanji::window::setCustomStyle()
   // style->Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
   // style->Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
   // style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+  style->FrameBorderSize = 1.0f;
+  style->FrameRounding = 8.0f;
 }
 
 

@@ -16,6 +16,7 @@ public:
   const String & getSelected() const { return selected; }
 
 private:
+  void table(unsigned int number, unsigned int step, std::string & selected) const;
   String selected{};
 };
 

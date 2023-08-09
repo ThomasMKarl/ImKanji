@@ -17,6 +17,20 @@ constexpr std::array<const char *, numberOfGraphemes> graphemeList{
     "耳", "⺮", "言", "貝", "車", "⻊", "酉", "金", "住", "雨", "門", "頁", "食", "馬", "魚", "鳥"};
 // clang-format on
 
+constexpr std::array<std::pair<unsigned int, unsigned int>, 11ULL> beginEnd{
+  std::make_pair<unsigned int, unsigned int>(0, 2),
+  std::make_pair<unsigned int, unsigned int>(2, 20),
+  std::make_pair<unsigned int, unsigned int>(20, 40),
+  std::make_pair<unsigned int, unsigned int>(40, 52),
+  std::make_pair<unsigned int, unsigned int>(52, 60),
+  std::make_pair<unsigned int, unsigned int>(60, 66),
+  std::make_pair<unsigned int, unsigned int>(66, 71),
+  std::make_pair<unsigned int, unsigned int>(71, 75),
+  std::make_pair<unsigned int, unsigned int>(75, 77),
+  std::make_pair<unsigned int, unsigned int>(77, 78),
+  std::make_pair<unsigned int, unsigned int>(78, 80)
+};
+
 void imkanji::window::Grapheme::draw(const char * title, bool * p_open)
 {
   if (!ImGui::Begin(title, p_open))
@@ -24,8 +38,6 @@ void imkanji::window::Grapheme::draw(const char * title, bool * p_open)
     ImGui::End();
     return;
   }
-
-  pushFont(1);
 
   ImGui::Text("Found:");
   for (const auto & flashcard: flashcardDB_gr)
@@ -52,7 +64,9 @@ void imkanji::window::Grapheme::draw(const char * title, bool * p_open)
     if (match && !allEmpty)
     {
       ImGui::SameLine();
+      pushFont(2);
       if (ImGui::Button(flashcard.kanji.c_str())) {}
+      ImGui::PopFont();
     }
   }
 
@@ -62,264 +76,42 @@ void imkanji::window::Grapheme::draw(const char * title, bool * p_open)
     if (sel.empty())
       continue;
     ImGui::SameLine();
+    pushFont(2);
     if (ImGui::Button(sel.c_str()))
       sel.clear();
+    ImGui::PopFont();
   }
 
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("1 stroke"))
-  {
-    for (unsigned int index = 0; index < 2; ++index)
-    {
-      if (index % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("2 strokes"))
-  {
-    for (unsigned int index = 2; index < 20; ++index)
-    {
-      if ((index - 2) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("3 strokes"))
-  {
-    for (unsigned int index = 20; index < 40; ++index)
-    {
-      if ((index - 20) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("4 strokes"))
-  {
-    for (unsigned int index = 40; index < 52; ++index)
-    {
-      if ((index - 40) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("5 strokes"))
-  {
-    for (unsigned int index = 52; index < 60; ++index)
-    {
-      if ((index - 52) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("6 strokes"))
-  {
-    for (unsigned int index = 60; index < 66; ++index)
-    {
-      if ((index - 60) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("7 strokes"))
-  {
-    for (unsigned int index = 66; index < 71; ++index)
-    {
-      if ((index - 66) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("8 strokes"))
-  {
-    for (unsigned int index = 71; index < 75; ++index)
-    {
-      if ((index - 71) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("9 strokes"))
-  {
-    for (unsigned int index = 75; index < 77; ++index)
-    {
-      if ((index - 75) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("10 strokes"))
-  {
-    for (unsigned int index = 77; index < 78; ++index)
-    {
-      if ((index - 77) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("11 strokes"))
-  {
-    for (unsigned int index = 78; index < 80; ++index)
-    {
-      if ((index - 78) % 10 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(graphemeList[index]))
-      {
-        for (auto & sel: selected)
-        {
-          if (sel == graphemeList[index])
-            sel.clear();
-          if (sel.empty())
-          {
-            sel = graphemeList[index];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  ImGui::PopFont();
+  for (unsigned int strokeNum = 1; strokeNum <= beginEnd.size(); ++strokeNum)
+    table(strokeNum);
 
   ImGui::End();
+}
+
+void imkanji::window::Grapheme::table(unsigned int strokeNum)
+{
+  ImGui::Separator();
+  if (ImGui::CollapsingHeader((std::to_string(strokeNum) + " strokes").c_str()))
+  {
+    for (unsigned int index = beginEnd[strokeNum - 1].first; index < beginEnd[strokeNum - 1].second; ++index)
+    {
+      if ((index - beginEnd[strokeNum - 1].first) % 10 != 0)
+        ImGui::SameLine();
+      pushFont(2);
+      if (ImGui::Button(graphemeList[index]))
+      {
+        for (auto & sel: selected)
+        {
+          if (sel == graphemeList[index])
+            sel.clear();
+          if (sel.empty())
+          {
+            sel = graphemeList[index];
+            break;
+          }
+        }
+      }
+      ImGui::PopFont();
+    }
+  }
 }

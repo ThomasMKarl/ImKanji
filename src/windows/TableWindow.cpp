@@ -36,6 +36,35 @@ constexpr std::array<const char *, numberOfKanji> kanjiList{
     "王", "案", "君", "達", "星", "雪", "直", "危"};
 // clang-format on
 
+constexpr std::array<std::pair<unsigned int, unsigned int>, 7> beginEnd{
+  std::make_pair<unsigned int, unsigned int>(1, 28),
+  std::make_pair<unsigned int, unsigned int>(29, 100),
+  std::make_pair<unsigned int, unsigned int>(101, 172),
+  std::make_pair<unsigned int, unsigned int>(173, 244),
+  std::make_pair<unsigned int, unsigned int>(245, 316),
+  std::make_pair<unsigned int, unsigned int>(317, 460),
+  std::make_pair<unsigned int, unsigned int>(461, 560)
+};
+
+void imkanji::window::Table::table(unsigned int number, unsigned int step, String & selected) const
+{
+  assert(number < beginEnd.size());
+  ImGui::Separator();
+  auto begin = beginEnd[number].first - 1;
+  if (ImGui::CollapsingHeader((std::to_string(beginEnd[number].first) + " - " + std::to_string(beginEnd[number].second)).c_str()))
+  {
+    pushFont(2);
+    for (unsigned int index = begin; index < beginEnd[number].second; ++index)
+    {
+      if ((index - begin) % step != 0)
+        ImGui::SameLine();
+      if (ImGui::Button(kanjiList[index]))
+        selected = kanjiList[index];
+    }
+    ImGui::PopFont();
+  }
+}
+
 void imkanji::window::Table::draw(const char * title, bool * p_open)
 {
   String newselect = selected;
@@ -46,104 +75,32 @@ void imkanji::window::Table::draw(const char * title, bool * p_open)
     return;
   }
 
-  pushFont(1);
-
   if (selected.empty())
     ImGui::Text(" ");
   else
-    ImGui::Text(("Selected: " + selected).c_str());
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("1 - 28"))
   {
-    for (unsigned int index = 0; index < 28; ++index)
-    {
-      if (index % 12 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
+    scaleFont(1.5f);
+    ImGui::Text("Selected: ");
+    scaleFont(1.0f);
+    ImGui::SameLine();
+    pushFont(3);
+    ImGui::Text(selected.c_str());
+    ImGui::PopFont();
   }
 
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("29 - 100"))
-  {
-    for (unsigned int index = 28; index < 100; ++index)
-    {
-      if ((index - 28) % 12 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("101 - 172"))
-  {
-    for (unsigned int index = 100; index < 172; ++index)
-    {
-      if ((index - 100) % 12 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("173 - 244"))
-  {
-    for (unsigned int index = 172; index < 244; ++index)
-    {
-      if ((index - 172) % 12 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("245 - 316"))
-  {
-    for (unsigned int index = 244; index < 316; ++index)
-    {
-      if ((index - 244) % 12 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("317 - 460"))
-  {
-    for (unsigned int index = 316; index < 460; ++index)
-    {
-      if ((index - 316) % 24 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
-
-  ImGui::Separator();
-  if (ImGui::CollapsingHeader("461 - 540"))
-  {
-    for (unsigned int index = 460; index < numberOfKanji; ++index)
-    {
-      if ((index - 460) % 24 != 0)
-        ImGui::SameLine();
-      if (ImGui::Button(kanjiList[index]))
-        newselect = kanjiList[index];
-    }
-  }
+  unsigned int number{0};
+  table(number++, 12, newselect);
+  table(number++, 12, newselect);
+  table(number++, 12, newselect);
+  table(number++, 12, newselect);
+  table(number++, 24, newselect);
+  table(number++, 24, newselect);
 
   if (selected != newselect)
   {
     std::swap(selected, newselect);
     notify(*this, "selected");
   }
-
-  ImGui::PopFont();
 
   ImGui::Separator();
   ImGui::End();
