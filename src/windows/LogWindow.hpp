@@ -3,6 +3,21 @@
 #include "Platform.hpp"
 #include "plog/Log.h"
 
+#ifdef DEBUG
+#define DIMLOG(_MESSAGE_, ...)                                                        \
+  {                                                                                   \
+    imkanji::String fullMess{imkanji::String{"DEBUG: "} + __PRETTY_FUNCTION__ + " " + \
+                             __FILE__ + ":" + std::to_string(__LINE__) + "\n\t" +     \
+                             _MESSAGE_ + "\n"};                                       \
+    fullMess = imkanji::makeString(fullMess.c_str(), __VA_ARGS__);                    \
+    PLOGD << imkanji::makeString(_MESSAGE_, __VA_ARGS__) << "\n";                     \
+    imkanji::window::Log::instance().addLog(fullMess.c_str(), "");                    \
+  }
+#else
+#define DIMLOG(_MESSAGE_, ...)                                                        \
+  {                                                                                   \
+  }
+#endif
 
 #define IIMLOG(_MESSAGE_, ...)                                                       \
   {                                                                                  \
