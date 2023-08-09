@@ -16,15 +16,24 @@ set(src_data
     Flashcard.cpp
     HData.cpp
     Platform.cpp
-    StbImage.cpp)
+    StbImage.cpp
+    Unicode.cpp)
 
 set(src_error
     error/Console.cpp
     error/Exceptions.cpp)
 
-add_library(imgui_kanji SHARED ${src_data} ${src_windows} ${src_error})
+if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
+    set(src_app
+        app/AppLauncherWin.cpp)
+else ()
+    set(src_app
+        app/AppLauncherLin.cpp)
+endif ()
+
+add_library(imgui_kanji SHARED ${src_data} ${src_windows} ${src_error} ${src_app})
 target_link_libraries(imgui_kanji PRIVATE Glaze::Glaze)
 target_link_libraries(imgui_kanji PRIVATE Plog::Plog)
 target_link_libraries(imgui_kanji PRIVATE Stb::Stb)
 target_link_libraries(imgui_kanji PRIVATE imgui imgui_opengl3 imgui_glfw nfd)
-target_include_directories(imgui_kanji PRIVATE "." "imgui" "windows" "nfd" "error")
+target_include_directories(imgui_kanji PRIVATE "." "imgui" "windows" "nfd" "error" "app")
