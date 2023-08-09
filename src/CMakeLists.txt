@@ -1,39 +1,37 @@
-add_subdirectory(imgui)
-add_subdirectory(nfd)
+add_subdirectory(data)
+add_subdirectory(windows)
 
-set(src_windows
-    windows/ConfigWindow.cpp
-    windows/FlashcardWindow.cpp
-    windows/GraphemeWindow.cpp
-    windows/Imgui.cpp
-    windows/LogWindow.cpp
-    windows/MainMenuBar.cpp
-    windows/MainWindow.cpp
-    windows/TableWindow.cpp)
+## IMKANJI
+add_executable(imkanji main.cpp)
 
-set(src_data
-    Cardbox.cpp
-    Flashcard.cpp
-    HData.cpp
-    Platform.cpp
-    StbImage.cpp
-    Unicode.cpp)
+target_include_directories(imkanji PRIVATE "data/" "data/app" "data/error" "windows" "windows/imgui" "windows/nfd")
 
-set(src_error
-    error/Console.cpp
-    error/Exceptions.cpp)
-
+target_link_libraries(imkanji PRIVATE imgui_kanji_data)
+target_link_libraries(imkanji PRIVATE imgui_kanji_gui)
 if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
-    set(src_app
-        app/AppLauncherWin.cpp)
+    target_sources(imkanji PRIVATE ../resources/icon.rc)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES Linux)
 else ()
-    set(src_app
-        app/AppLauncherLin.cpp)
+    message(FATAL_ERROR "Your OS is not supported, CMake will exit.")
 endif ()
 
-add_library(imgui_kanji SHARED ${src_data} ${src_windows} ${src_error} ${src_app})
-target_link_libraries(imgui_kanji PRIVATE Glaze::Glaze)
-target_link_libraries(imgui_kanji PRIVATE Plog::Plog)
-target_link_libraries(imgui_kanji PRIVATE Stb::Stb)
-target_link_libraries(imgui_kanji PRIVATE imgui imgui_opengl3 imgui_glfw nfd)
-target_include_directories(imgui_kanji PRIVATE "." "imgui" "windows" "nfd" "error" "app")
+target_link_libraries(imkanji PRIVATE Plog::Plog)
+target_link_libraries(imkanji PRIVATE Glaze::Glaze)
+
+target_link_libraries(imkanji PRIVATE imgui)
+target_link_libraries(imkanji PRIVATE imgui_glfw)
+target_link_libraries(imkanji PRIVATE imgui_opengl3)
+
+## IMAKNJI_CMD
+add_executable(imkanji_cmd main_cmd.cpp)
+
+target_include_directories(imkanji_cmd PRIVATE "data/" "data/app" "data/error" "windows" "windows/imgui" "windows/nfd")
+
+target_link_libraries(imkanji_cmd PRIVATE imgui_kanji_data)
+
+target_link_libraries(imkanji_cmd PRIVATE Plog::Plog)
+target_link_libraries(imkanji_cmd PRIVATE Glaze::Glaze)
+
+target_link_libraries(imkanji_cmd PRIVATE imgui)
+target_link_libraries(imkanji_cmd PRIVATE imgui_glfw)
+target_link_libraries(imkanji_cmd PRIVATE imgui_opengl3)

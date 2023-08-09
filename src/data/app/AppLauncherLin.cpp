@@ -1,5 +1,5 @@
 #include "AppLauncherLin.hpp"
-#include "LogWindow.hpp"
+#include "plog/Log.h"
 
 
 bool imkanji::Pipe::open(const StringView & cmd, const StringView & mode)
@@ -12,7 +12,7 @@ bool imkanji::Pipe::open(const StringView & cmd, const StringView & mode)
   else
   {
     int help = errno;
-    DIMLOG("failed to open pipe (errno %s)", std::strerror(help));
+    PLOGD << "failed to open pipe (errno " << std::strerror(help) << ")";
   }
 #endif
   return mOpen;
@@ -52,7 +52,7 @@ bool imkanji::Pipe::close()
     else
     {
       int help = errno;
-      DIMLOG("failed to close pipe (errno %s)", std::strerror(help));
+      PLOGD << "failed to close pipe (errno " << std::strerror(help) << ")";
     }
 #endif
   }
@@ -72,7 +72,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
       newpath.concat(extension);
       if (!std::filesystem::exists(newpath))
       {
-        DIMLOG("Application \"%s\" does not exist", mPathToApp.c_str());
+        PLOGD << "Application \"" << mPathToApp << "\" does not exist";
         return {};
       }
     }
@@ -80,13 +80,13 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
 
   if (std::filesystem::is_directory(mPathToApp))
   {
-    DIMLOG("Application path \"%s\" is a directory", mPathToApp.c_str());
+    PLOGD << "Application path \"" << mPathToApp << "\" is a directory";
     return {};
   }
 
   if (!std::filesystem::is_directory(mWorkingDir))
   {
-    DIMLOG("Working directory \"%s\" is not a directory", mWorkingDir.c_str());
+    PLOGD << "Working directory \"" << mWorkingDir << "\" is not a directory";
     return {};
   }
 
@@ -107,7 +107,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
 
   if (!handle.open(cmd.c_str()))
   {
-    DIMLOG("failed to open pipe", "");
+    PLOGD << "failed to open pipe";
     return {};
   }
 
@@ -115,7 +115,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
 
   if (!handle.close())
   {
-    DIMLOG("failed to close pipe", "");
+    PLOGD << "failed to close pipe";
   }
 
   if (config.toStdOut)

@@ -1,6 +1,6 @@
 #include "AppLauncherWin.hpp"
-#include "LogWindow.hpp"
 #include "Unicode.hpp"
+#include "plog/Log.h"
 
 
 [[nodiscard]] wchar_t * imkanji::toWideChar(const char * in)
@@ -15,14 +15,14 @@
 
   if (checkUtf8(reinterpret_cast<const utf8char *>(in), numElems) == 0)
   {
-    DIMLOG("string is not UTF8 encoded", "");
+    PLOGD << "string is not UTF8 encoded";
     return nullptr;
   }
 
   auto res = utf8ToWchar(reinterpret_cast<const utf8char *>(in));
   if (res == nullptr)
   {
-    DIMLOG("failed to convert UTF8 to Wchar", "");
+    PLOGD << "failed to convert UTF8 to Wchar";
     return nullptr;
   }
 
@@ -37,13 +37,13 @@
   auto res = wcharToUtf8(in);
   if (res == nullptr)
   {
-    DIMLOG("failed to convert Wchar to UTF8", "");
+    PLOGD << "failed to convert Wchar to UTF8";
     return nullptr;
   }
 
   if (checkUtf8(res, strlenUtf8(res)) == 0)
   {
-    DIMLOG("string is not UTF8 encoded", "");
+    PLOGD << "string is not UTF8 encoded";
     return nullptr;
   }
 
@@ -102,7 +102,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
       newpath.concat(extension);
       if (!std::filesystem::exists(newpath))
       {
-        DIMLOG("Application \"%s\" does not exist", mPathToApp.c_str());
+        PLOGD << "Application \"" << mPathToApp << "\" does not exist";
         return {};
       }
     }
@@ -110,7 +110,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
 
   if (std::filesystem::is_directory(mPathToApp))
   {
-    DIMLOG("Application path \"%s\" is a directory", mPathToApp.c_str());
+    PLOGD << "Application path \"" << mPathToApp << "\" is a directory";
     return {};
   }
 
@@ -154,7 +154,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
   {
     if (help)
       free(help);
-    DIMLOG("Could not launch (%d) \"%s\"", static_cast<int>(GetLastError()), cmd.c_str());
+    PLOGD << "Could not launch (" << GetLastError() << ") \"" << cmd << "\"";
     return {};
   }
 
@@ -190,7 +190,7 @@ std::string imkanji::App::execute(const StringViews & args, const LaunchConfig &
 
     if (static_cast<int>(exitCode) < 0 || static_cast<int>(exitCode) > 127)
     {
-      DIMLOG("error code %d indicates an error", static_cast<int>(exitCode));
+      PLOGD << "error code " << exitCode << " indicates an error";
     }
 
     if (help)
