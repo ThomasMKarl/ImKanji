@@ -73,7 +73,17 @@ imkanji::String imkanji::toString(const Strings & in)
   return res;
 }
 
-std::filesystem::path imkanji::makeUtf8Path(const char * path)
+std::filesystem::path imkanji::makeUtf8Path(const StringView & path)
 {
-  return std::filesystem::path((const char8_t *)path);
+  return std::filesystem::path(reinterpret_cast<const char8_t *>(path.data()));
+}
+
+uint64_t imkanji::replace(String & in, const StringView & toReplace, const StringView & replace)
+{
+  uint64_t count{0};
+  for (std::string::size_type pos{};
+       in.npos != (pos = in.find(toReplace.data(), pos, toReplace.length()));
+       pos += replace.length(), ++count)
+    in.replace(pos, toReplace.length(), replace.data(), replace.length());
+  return count;
 }

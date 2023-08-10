@@ -53,7 +53,9 @@ Strings toVector(const String & in);
 
 String toString(const Strings & in);
 
-std::filesystem::path makeUtf8Path(const char * path);
+std::filesystem::path makeUtf8Path(const StringView & path);
+
+uint64_t replace(String & in, const StringView & toReplace, const StringView & replace);
 
 template<typename... T>
 String makeString(const StringView & format, T... args)

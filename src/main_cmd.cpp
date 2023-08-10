@@ -1,13 +1,11 @@
 #include <plog/Log.h>
 #include <plog/Initializers/RollingFileInitializer.h>
 #include <iostream>
-#include <stdexcept>
 #include <filesystem>
 #include "StdExceptions.hpp"
+#include "Platform.hpp"
 #include "Exceptions.hpp"
-#include "MainWindow.hpp"
-#include "Flashcard.hpp"
-#include "Cardbox.hpp"
+#include "CmdConfig.hpp"
 
 
 void initLogging(const std::string_view & path)
@@ -27,25 +25,20 @@ void initLogging(const std::string_view & path)
   plog::init(plog::debug, logFile.c_str());
 }
 
-int main(int, char **)
+void main_cmd()
 {
-  initLogging("qtkanj.log");
+  std::cout << "TBI!\n";
+}
 
-  LOG_INFO << "starting...";
-
-  imkanji::Cardbox::instance("resources/cardbox.json");
-
-  auto mainWindow = imkanji::window::Main::createMax("Main Window");
-  mainWindow.addFont("resources/fonts/dejavu/DejaVuSans.ttf", 20.0f);
-  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 20.0f);
-  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 30.0f);
-  mainWindow.addFont("resources/fonts/kaisei/KaiseiHarunoUmi-Regular.ttf", 100.0f);
-
-  imkanji::window::setCustomStyle();
-
+int main(int argc, const char ** argv)
+{
   try
   {
-    mainWindow.renderLoop();
+    initLogging("qtkanj.log");
+
+    imkanji::CmdConfig::init(argc, argv);
+
+    main_cmd();
   }
   catch (const BaseError & e)
   {
