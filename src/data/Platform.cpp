@@ -1,5 +1,10 @@
 #include "Platform.hpp"
 
+namespace imkanji
+{
+#include "version.cpp"
+}
+
 
 imkanji::StringView imkanji::trim(const StringView & in)
 {
