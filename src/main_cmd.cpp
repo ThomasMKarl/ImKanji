@@ -1,5 +1,3 @@
-#include <plog/Log.h>
-#include <plog/Initializers/RollingFileInitializer.h>
 #include <iostream>
 #include <filesystem>
 #include "StdExceptions.hpp"
@@ -8,43 +6,33 @@
 #include "CmdConfig.hpp"
 
 
-void initLogging(const std::string_view & path)
-{
-  if (path.empty())
-    return;
-
-  auto logFile = imkanji::makeUtf8Path(path.data());
-  if (std::filesystem::exists(logFile))
-  {
-    if (!std::filesystem::remove(logFile))
-    {
-      LOG_ERROR << "cannot remove old log at \"" << logFile.string() << "\"\n";
-      return;
-    }
-  }
-  plog::init(plog::debug, logFile.c_str());
-}
-
 void main_cmd()
 {
-  std::cout << "TBI!\n";
+  throw imkanji::Error{"TBI!", "bla"};
 }
 
 int main(int argc, const char ** argv)
 {
   try
   {
-    initLogging("qtkanj.log");
+    imkanji::initLogging("qtkanj.log");
 
+    imkanji::PlatformInfo::init("ImKanji", "Kanji Training with ImGui");
     imkanji::CmdConfig::init(argc, argv);
+    imkanji::PlatformInfo::instance().print();
+
+    imkanji::timedCout("starting...");
 
     main_cmd();
   }
-  catch (const BaseError & e)
+  catch (const imkanji::BaseError & e)
   {
-    e.handle(GlobalErrorHandler::instance());
+    PLOGI << "blub";
+    e.handle(imkanji::GlobalErrorHandler::instance());
   }
   _STD_CATCH_BLOCK_
+
+  imkanji::timedCout("shutting down...");
 
   return EXIT_SUCCESS;
 }

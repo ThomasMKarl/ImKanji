@@ -12,3 +12,4 @@ else ()
   target_link_libraries(imgui_glfw imgui glfw)
 endif ()
 
+install(TARGETS imgui_opengl3 imgui_glfw)

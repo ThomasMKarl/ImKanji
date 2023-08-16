@@ -3,11 +3,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-#ifndef GLOG_NO_ABBREVIATED_SEVERITIES
-#define GLOG_NO_ABBREVIATED_SEVERITIES
-#endif
 #include <windows.h>
-#undef ERROR
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
 #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
 #endif
@@ -15,8 +11,11 @@ static HANDLE stdoutHandle;
 static DWORD outModeInit;
 #endif
 
-void setupConsole()
+void imkanji::setupConsole()
 {
+#ifdef RELEASE
+  return;
+#endif
 #ifdef _WIN32
   DWORD outMode = 0;
   stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -34,15 +33,18 @@ void setupConsole()
 #endif
 }
 
-void restoreConsole()
+void imkanji::restoreConsole()
 {
+#ifdef RELEASE
+  return;
+#endif
   std::cout << "\033[0m";
 #ifdef _WIN32
   SetConsoleMode(stdoutHandle, outModeInit);
 #endif
 }
 
-void addBreaks(std::string & in)
+void imkanji::addBreaks(std::string & in)
 {
   if (in.back() != '\n')
     in.append("\n");
@@ -50,7 +52,7 @@ void addBreaks(std::string & in)
     in = std::string{"\n" + in};
 }
 
-std::string colorize(const std::string & in, AnsiColorF foreground, AnsiColorB background)
+std::string imkanji::colorize(const std::string & in, AnsiColorF foreground, AnsiColorB background)
 {
 #ifdef DEBUG
   std::string inColored{"\033[" + std::to_string(static_cast<int>(foreground))};
@@ -63,7 +65,7 @@ std::string colorize(const std::string & in, AnsiColorF foreground, AnsiColorB b
 #endif
 }
 
-std::string & colorize(std::string & in, AnsiColorF foreground, AnsiColorB background)
+std::string & imkanji::colorize(std::string & in, AnsiColorF foreground, AnsiColorB background)
 {
 #ifdef DEBUG
   std::string inColored{"\033[" + std::to_string(static_cast<int>(foreground))};

@@ -1,16 +1,18 @@
 #include "CmdConfig.hpp"
 #include "ArgParse.hpp"
+#include "Platform.hpp"
 
 
 argparse::ArgumentParser getFromCmd(int argc, const char ** argv)
 {
-  argparse::ArgumentParser program(argv[0], "1.0", argparse::default_arguments::none, true);
+  argparse::ArgumentParser program(argv[0], imkanji::PlatformInfo::instance().gitTag().data(), argparse::default_arguments::none, true);
 
   program.add_argument("--version")
       .help("shows version information and exits")
-      .action([=](const std::string & s)
+      .action([=](const std::string &)
               {
-                std::cout << "ImKanji - Kanji Training in ImGui\n";
+                std::cout << imkanji::PlatformInfo::instance().name() << (imkanji::PlatformInfo::instance().description().empty() ? "" : " - " + imkanji::PlatformInfo::instance().description()) << '\n';
+                std::cout << "Version: " << imkanji::PlatformInfo::instance().majorVersion() << "." << imkanji::PlatformInfo::instance().minorVersion() << "." << imkanji::PlatformInfo::instance().minorSubVersion() << '\n';
                 exit(0);
               })
       .default_value(false)
@@ -23,7 +25,7 @@ argparse::ArgumentParser getFromCmd(int argc, const char ** argv)
 
   program.add_argument("-h", "--help")
       .help("shows help message and exits")
-      .action([=](const std::string & s)
+      .action([=](const std::string &)
               {
                 std::cout << "\n\n############ HELP ############\n\n"
                           << program.help().str() << "\n##############################\n";

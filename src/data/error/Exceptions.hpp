@@ -4,29 +4,32 @@
 #include "plog/Log.h"
 
 
-#define THROW_ERROR(_RELEASE_MESSAGE_)  \
-  {                                     \
-    LOG_DEBUG << "raising error...";    \
-    throw Error{_RELEASE_MESSAGE_, ""}; \
+#define THROW_ERROR(_RELEASE_MESSAGE_)           \
+  {                                              \
+    PLOGD << "raising error...";                 \
+    throw imkanji::Error{_RELEASE_MESSAGE_, ""}; \
   }
 
-#define THROW_ERROR_D(_RELEASE_MESSAGE_, _DEBUG_MESSAGE_) \
-  {                                                       \
-    LOG_DEBUG << "raising error...";                      \
-    throw Error{_RELEASE_MESSAGE_, _DEBUG_MESSAGE_};      \
+#define THROW_ERROR_D(_RELEASE_MESSAGE_, _DEBUG_MESSAGE_)     \
+  {                                                           \
+    PLOG << "raising error...";                               \
+    throw imkanji::Error{_RELEASE_MESSAGE_, _DEBUG_MESSAGE_}; \
   }
 
-#define THROW_FATALERROR(_RELEASE_MESSAGE_) \
-  {                                         \
-    LOG_DEBUG << "raising fatal error...";  \
-    throw Error{_RELEASE_MESSAGE_, ""};     \
+#define THROW_FATALERROR(_RELEASE_MESSAGE_)      \
+  {                                              \
+    PLOGD << "raising fatal error...";           \
+    throw imkanji::Error{_RELEASE_MESSAGE_, ""}; \
   }
 
 #define THROW_FATALERROR_D(_RELEASE_MESSAGE_, _DEBUG_MESSAGE_) \
   {                                                            \
-    LOG_DEBUG << "raising fatal error...";                     \
-    throw Error{_RELEASE_MESSAGE_, _DEBUG_MESSAGE_};           \
+    PLOGD << "raising fatal error...";                         \
+    throw imkanji::Error{_RELEASE_MESSAGE_, _DEBUG_MESSAGE_};  \
   }
+
+namespace imkanji
+{
 
 struct Error : BaseError
 {
@@ -59,3 +62,5 @@ public:
   std::string releaseMessage{};
   std::string debugMessage{};
 };
+
+} // namespace imkanji

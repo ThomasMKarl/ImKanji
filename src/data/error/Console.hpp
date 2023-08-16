@@ -1,6 +1,9 @@
 #pragma once
-
 #include <string>
+
+
+namespace imkanji
+{
 
 enum class AnsiColorF
 {
@@ -33,3 +36,5 @@ void restoreConsole();
 void addBreaks(std::string & in);
 std::string colorize(const std::string & in, AnsiColorF foreground, AnsiColorB background = AnsiColorB::None);
 std::string & colorize(std::string & in, AnsiColorF foreground, AnsiColorB background);
+
+} // namespace imkanji

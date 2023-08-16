@@ -10,6 +10,9 @@
 #include <plog/Log.h>
 
 
+namespace imkanji
+{
+
 template<typename E>
   requires std::derived_from<E, std::exception>
 std::string stdExceptionToString()
@@ -91,9 +94,6 @@ std::string stdExceptionToString()
   if constexpr (std::is_same_v<E, std::bad_function_call>)
     return "bad_function_call"; // (since C++11)
 
-  if constexpr (std::is_same_v<E, std::ios_base::failure>)
-    return "ios_base::failure"; // (until C++11)
-
   if constexpr (std::is_same_v<E, std::bad_optional_access>)
     return "bad_optional_access"; // (since C++17)
 
@@ -112,28 +112,118 @@ template<typename E>
   requires std::derived_from<E, std::exception>
 void logException(const E & e)
 {
-  LOG_ERROR << "internal error";
-  LOG_DEBUG << stdExceptionToString<E>();
-  LOG_DEBUG << e.what();
+  PLOGE << "internal error";
+  PLOGD << "name: " << stdExceptionToString<E>();
+  PLOGD << "message: " << e.what();
 }
 
+} // namespace imkanji
+
 #ifndef _STD_CATCH_BLOCK_
-#define _STD_CATCH_BLOCK_                 \
-  catch (const std::invalid_argument & e) \
-  {                                       \
-    logException(e);                      \
-  }                                       \
-  catch (const std::runtime_error & e)    \
-  {                                       \
-    logException(e);                      \
-  }                                       \
-  catch (const std::exception & e)        \
-  {                                       \
-    logException(e);                      \
-  }                                       \
-  catch (...)                             \
-  {                                       \
-    LOG_ERROR << "internal error";        \
-    LOG_DEBUG << "unexpected exception";  \
+#define _STD_CATCH_BLOCK_                             \
+  catch (const std::invalid_argument & e)             \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::domain_error & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::length_error & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::out_of_range & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::range_error & e)                  \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::overflow_error & e)               \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::underflow_error & e)              \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::future_error & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::regex_error & e)                  \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_array_new_length & e)         \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::ios_base::failure & e)            \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::filesystem::filesystem_error & e) \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::system_error & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_any_cast & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::logic_error & e)                  \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::runtime_error & e)                \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_typeid & e)                   \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_cast & e)                     \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_alloc & e)                    \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_exception & e)                \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_weak_ptr & e)                 \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_function_call & e)            \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_optional_access & e)          \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::bad_variant_access & e)           \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (const std::exception & e)                    \
+  {                                                   \
+    imkanji::logException(e);                         \
+  }                                                   \
+  catch (...)                                         \
+  {                                                   \
+    PLOGE << "internal error";                        \
+    PLOGD << "unexpected exception";                  \
   }
 #endif

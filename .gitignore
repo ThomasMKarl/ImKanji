@@ -5,3 +5,5 @@ build
 *.log
 imgui.ini
 checks.json
+resources/winres.rc
+install

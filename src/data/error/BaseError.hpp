@@ -2,6 +2,9 @@
 #include <cassert>
 
 
+namespace imkanji
+{
+
 template<typename... ETs> struct ErrorHandler;
 
 template<typename ET, typename... ETs>
@@ -52,3 +55,5 @@ struct BaseError
 {
   virtual void handle(const BaseErrorHandler &) const = 0;
 };
+
+} // namespace imkanji

@@ -2,9 +2,6 @@ execute_process(COMMAND git log --pretty=format:'%h' -n 1
                 OUTPUT_VARIABLE GIT_REV
                 ERROR_QUIET)
 
-# Check whether we got any revision (which isn't
-# always the case, e.g. when someone downloaded a zip
-# file from Github instead of a checkout)
 if ("${GIT_REV}" STREQUAL "")
     set(GIT_REV "N/A")
     set(GIT_DIFF "")
@@ -32,12 +29,12 @@ set(VERSION "const char* GIT_REV=\"${GIT_REV}${GIT_DIFF}\";
 const char* GIT_TAG=\"${GIT_TAG}\";
 const char* GIT_BRANCH=\"${GIT_BRANCH}\";")
 
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp)
-    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp VERSION_)
+if(EXISTS ${CMAKE_SOURCE_DIR}/src/data/version.cpp)
+    file(READ ${CMAKE_SOURCE_DIR}/src/data/version.cpp VERSION_)
 else()
     set(VERSION_ "")
 endif()
 
 if (NOT "${VERSION}" STREQUAL "${VERSION_}")
-    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/version.cpp "${VERSION}")
+    file(WRITE ${CMAKE_SOURCE_DIR}/src/data/version.cpp "${VERSION}")
 endif()

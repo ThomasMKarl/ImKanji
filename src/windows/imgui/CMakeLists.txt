@@ -15,3 +15,5 @@ target_include_directories(imgui PRIVATE ${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(imgui ${FREETYPE_LIBRARIES})
 
 add_subdirectory(backends)
+
+install(TARGETS imgui)

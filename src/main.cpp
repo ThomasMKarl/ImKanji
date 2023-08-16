@@ -1,5 +1,3 @@
-#include <plog/Log.h>
-#include <plog/Initializers/RollingFileInitializer.h>
 #include <iostream>
 #include <stdexcept>
 #include <filesystem>
@@ -11,26 +9,14 @@
 #include "CmdConfig.hpp"
 
 
-void initLogging(const std::string_view & path)
-{
-  if (path.empty())
-    return;
-
-  auto logFile = imkanji::makeUtf8Path(path.data());
-  if (std::filesystem::exists(logFile))
-  {
-    if (!std::filesystem::remove(logFile))
-    {
-      LOG_ERROR << "cannot remove old log at \"" << logFile.string() << "\"\n";
-      return;
-    }
-  }
-  plog::init(plog::debug, logFile.c_str());
-}
-
 void main_gui()
 {
-  LOG_INFO << "starting...";
+/*#ifdef _WIN32
+  HWND window;
+  AllocConsole();
+  window = FindWindowA("ConsoleWindowClass", nullptr);
+  ShowWindow(window, imkanji::isDebug() ? 0 : 1);
+#endif*/
 
   imkanji::Cardbox::instance("resources/cardbox.json");
 
@@ -54,20 +40,26 @@ int main(int argc, const char ** argv)
 {
   try
   {
-    initLogging("qtkanj.log");
+    imkanji::initLogging("qtkanj.log");
 
+    imkanji::PlatformInfo::init("ImKanji", "Kanji Training with ImGui");
     imkanji::CmdConfig::init(argc, argv);
+    imkanji::PlatformInfo::instance().log();
+
+    PLOGD << "starting...";
 
     if (imkanji::CmdConfig::instance().noGui())
       main_cmd();
     else
       main_gui();
   }
-  catch (const BaseError & e)
+  catch (const imkanji::BaseError & e)
   {
-    e.handle(GlobalErrorHandler::instance());
+    e.handle(imkanji::GlobalErrorHandler::instance());
   }
   _STD_CATCH_BLOCK_
+
+  PLOGD << "shutting down...";
 
   return EXIT_SUCCESS;
 }
