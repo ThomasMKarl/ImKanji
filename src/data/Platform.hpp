@@ -52,7 +52,7 @@ constexpr bool isRelease()
 
 constexpr bool isProfile()
 {
-#ifdef RELEASE
+#ifdef PROFILE
   return true;
 #else
   return false;

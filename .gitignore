@@ -1,9 +1,8 @@
 CMakeFiles
 .vscode
 Makefile
-build
 *.log
 imgui.ini
-checks.json
 resources/winres.rc
 install
+src/data/version.cpp

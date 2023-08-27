@@ -28,8 +28,8 @@ imkanji::PlatformInfo imkanji::PlatformInfo::nullBehaiviour()
 #endif
 #ifdef LINUX
   char result[PATH_MAX];
-  ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-  auto path = std::filesystem::path{String{result, count > 0 ? count : 0}};
+  auto count = readlink("/proc/self/exe", result, PATH_MAX);
+  auto path = std::filesystem::path{String{result, count > 0 ? static_cast<uint64_t>(count) : 0ULL}};
 #endif
 
   res.mAppDir = path.parent_path().string();

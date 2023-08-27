@@ -31,7 +31,6 @@ target_link_libraries(${EXE_NAME} PRIVATE imgui_opengl3)
 
 ## IMAKNJI_CMD
 add_executable(${EXE_NAME}_cmd main_cmd.cpp)
-target_link_libraries(${EXE_NAME}_cmd PRIVATE -static gcc stdc++ winpthread -dynamic)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES Windows)
   target_compile_definitions(${EXE_NAME}_cmd PRIVATE PLOG_EXPORT)
